@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Collections.Generic;
+using HandlebarsWebsite.Views.Layout;
 
 namespace HandlebarsWebsite.Views.Page
 {
@@ -12,11 +13,11 @@ namespace HandlebarsWebsite.Views.Page
     public static string Render(HandlebarsWebsite.Models.PageModel viewModel)
     {
       var sb = new StringBuilder(64);
-      sb.Append("\r\n");
-      ; /*layout ~/Views/Layout/Main.hbs*/
+      sb.Append(Main.PreRender(viewModel));
       sb.Append("\r\n<h1>");
       sb.Append(WebUtility.HtmlEncode(viewModel.Title));
       sb.Append("</h1>");
+      sb.Append(Main.PostRender(viewModel));
       return sb.ToString();
     }
 
@@ -53,4 +54,4 @@ namespace HandlebarsWebsite.Views.Page
     {
     }
   }
-}/*compiled in 25ms*/
+}/*compiled in 122ms*/

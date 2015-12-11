@@ -13,17 +13,14 @@ namespace Handlebars
     }
     protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
     {
-      return new HandlebarsView(CreateViewNamespace(partialPath));
+      return new HandlebarsView(partialPath);
     }
 
     protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
     {
-      return new HandlebarsView(CreateViewNamespace(viewPath));
+      return new HandlebarsView(viewPath);
     }
 
-    private string CreateViewNamespace(string viewPath)
-    {
-      return viewPath.Replace("~/", "").Replace("/", ".").Replace(".hbs", "");
-    }
+   
   }
 }
