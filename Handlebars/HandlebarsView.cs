@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Reflection;
 using System.Web.Mvc;
 
@@ -7,14 +7,15 @@ namespace Handlebars
 {
   class HandlebarsView : IView
   {
-    private string _viewPath;    
+    private string _viewPath;
+    private static ConcurrentDictionary<string, Type> ViewTypes { get; set; }
 
     public HandlebarsView(string viewPath)
     {
       _viewPath = viewPath;
       if (ViewTypes == null)
       {
-        ViewTypes = new Dictionary<string, Type>();
+        ViewTypes = new ConcurrentDictionary<string, Type>();
       }
     }    
 
@@ -30,10 +31,6 @@ namespace Handlebars
       string output = (string)renderMethod.Invoke(null, new object[1] { model });
       writer.Write(output);
     }   
-
-
-    private static Dictionary<string, Type> ViewTypes { get; set; }
-
 
     private Type GetViewType(ViewContext viewContext)
     {
@@ -52,7 +49,7 @@ namespace Handlebars
         {
           throw new Exception($"Could not find view of Type '{viewNameSpace}'");
         }
-        ViewTypes.Add(_viewPath, viewType);        
+        ViewTypes.AddOrUpdate(_viewPath, viewType, (path, type) => type);        
       }
       return viewType;
     }
